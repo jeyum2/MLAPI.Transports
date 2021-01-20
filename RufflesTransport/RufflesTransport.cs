@@ -120,11 +120,13 @@ namespace RufflesTransport
 
         public override void Send(ulong clientId, ArraySegment<byte> data, string channelName)
         {
-            GetRufflesConnectionDetails(clientId, out ulong connectionId);
+            try {
+                GetRufflesConnectionDetails(clientId, out ulong connectionId);
 
-            byte channelId = channelNameToId[channelName];
+                byte channelId = channelNameToId[channelName];
 
-            connections[connectionId].Send(data, channelId, false, 0);
+                connections[connectionId].Send(data, channelId, false, 0);
+            } catch { } // Ignore network exceptions
         }
 
         public override NetEventType PollEvent(out ulong clientId, out string channelName, out ArraySegment<byte> payload, out float receiveTime)
